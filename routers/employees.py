@@ -4,9 +4,9 @@ from db.client import my_database
 from db.schemas.employee import employee_schema, employees_schema
 from bson import ObjectId
 
-router = APIRouter(tags=["employees"])
+router = APIRouter(tags=["Community"])
 
-@router.get("/employees", response_model=list[Employee])
+@router.get("/community", response_model=list[Employee])
 async def employees():
     return employees_schema(my_database.employees.find())
 
@@ -44,9 +44,7 @@ async def employee(employee: Employee):
     del employee_dict["id"]
 
     try:
-
         my_database.employees.find_one_and_replace({"_id": ObjectId(employee.id)}, employee_dict)
-
     except:
         return {"error": "Employee not found"}
 
