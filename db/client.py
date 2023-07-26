@@ -4,4 +4,5 @@ mongo_url = "mongodb+srv://davidfrodri:contrasena@e-big-comunity.pyc74u1.mongodb
 
 db_client = MongoClient(mongo_url)
 
-my_database = db_client['e-employers']
+employers_database = db_client['e-employers']
+subscribers_database = db_client['e-subscribe-emails']

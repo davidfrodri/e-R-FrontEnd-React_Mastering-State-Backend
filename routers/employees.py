@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from db.models.employee import Employee
-from db.client import my_database
+from db.client import employers_database
 from db.schemas.employee import employee_schema, employees_schema
 from bson import ObjectId
 
@@ -8,11 +8,11 @@ router = APIRouter(tags=["Community"])
 
 @router.get("/community", response_model=list[Employee])
 async def employees():
-    return employees_schema(my_database.employees.find())
+    return employees_schema(employers_database.employees.find())
 
 def search_employee(field: str, key):
     try:
-        employee = employee_schema(my_database.employees.find_one({field: key}))
+        employee = employee_schema(employers_database.employees.find_one({field: key}))
         return Employee(**employee)
     except:
         return {"error": "Employee not found"}
@@ -24,15 +24,13 @@ async def employee(id: str):
 
 @router.post("/employee/", response_model=Employee, status_code=201)
 async def employee(employee: Employee):
-    if type(search_employee("name", employee.name)) == Employee:
-        raise HTTPException(status_code=409, detail="Employee already exist") 
 
     employee_dict = dict(employee)
     del employee_dict["id"]
 
-    id = my_database.employees.insert_one(employee_dict).inserted_id
+    id = employers_database.employees.insert_one(employee_dict).inserted_id
 
-    new_employee = employee_schema(my_database.employees.find_one({"_id": id}))
+    new_employee = employee_schema(employers_database.employees.find_one({"_id": id}))
 
     return Employee(**new_employee)
 
@@ -44,7 +42,7 @@ async def employee(employee: Employee):
     del employee_dict["id"]
 
     try:
-        my_database.employees.find_one_and_replace({"_id": ObjectId(employee.id)}, employee_dict)
+        employers_database.employees.find_one_and_replace({"_id": ObjectId(employee.id)}, employee_dict)
     except:
         return {"error": "Employee not found"}
 
@@ -55,7 +53,7 @@ async def employee(employee: Employee):
 @router.delete("/employee/{id}")
 async def employee(id: str, status_code=status.HTTP_204_NO_CONTENT):
 
-    found = my_database.employees.find_one_and_delete({"_id": ObjectId(id)})
+    found = employers_database.employees.find_one_and_delete({"_id": ObjectId(id)})
 
     if not found:
         return {"error": "Employee not found"}
