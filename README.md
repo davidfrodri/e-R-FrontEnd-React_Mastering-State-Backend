@@ -171,7 +171,7 @@ Request Body:
 
 8. Delete a subscriber by ID:
 
-DELETE /subscribe/{id}
+DELETE /subscribe/?email=[email]
 
 ## License
 
