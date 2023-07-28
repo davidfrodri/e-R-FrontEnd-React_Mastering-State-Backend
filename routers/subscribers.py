@@ -31,12 +31,12 @@ async def subscriber(subscriber: Subscriber):
 
     return Subscriber(**new_subscriber)
 
-@router.delete("/subscribe/{id}")
-async def subscriber(id: str, status_code=status.HTTP_204_NO_CONTENT):
+@router.delete("/subscribe")
+async def subscriber(email: str, status_code=status.HTTP_204_NO_CONTENT):
 
-    found = subscribers_database.subscriber.find_one_and_delete({"_id": ObjectId(id)})
+    found = subscribers_database.subscriber.find_one_and_delete({"email": email})
 
     if not found:
-        return {"error": "Subscriber not found"}
+        raise HTTPException(status_code=404, detail="Subscriber not found")
     else:
-        return {"success": f"Subscriber with id = {id} has been deleted"}
+        return {"success": f"Subscriber with email = {email} has been deleted"}
