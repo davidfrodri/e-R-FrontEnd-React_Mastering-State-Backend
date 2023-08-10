@@ -13,11 +13,18 @@ This project is a basic backend developed in Python with the FastAPI framework. 
 ## Installation
 
 1. Clone this repository or download the source code of the project.
-2. pip install -r requirements.txt
-
-```bash
+   
+ ```bash
 git clone https://github.com/davidfrodri/e-R-FrontEnd-React_Mastering-State-Backend.git
 ```
+2. Install dependencies with.
+   
+    pip install -r requirements.txt
+4. Run server with.
+   
+   uvicorn main:app
+
+
 
 ## Requirements
 
